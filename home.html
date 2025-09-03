@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saturn IA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="assets/Saturn IA Mini.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body style="background-image: url(assets/Backgraung_homes.png); background-repeat: no-repeat; background-size: cover;">
+    <div id="app">
+        <section id="home" class="relative min-h-screen flex flex-col justify-between section-intro">
+            <nav class="nav-bar w-full py-4 px-6 flex justify-between items-center rounded-b-xl shadow-lg" style="background-color: #363636; color: white;">
+                <div class="flex items-center">
+                    <img src="assets/Saturno.png" alt="Logo de Saturno IA" class="h-24 w-auto mr-2">
+                    <h1 class="text-3xl font-bold">Saturn IA</h1>
+                </div>
+                <button id="menu-button" class="md:hidden p-2 focus:outline-none">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+                <div id="nav-menu" class="nav-menu fixed top-0 -right-full h-full w-64 bg-gray-800 text-white shadow-xl z-50 p-6 md:static md:w-auto md:h-auto md:bg-transparent md:text-inherit md:shadow-none md:p-0 md:flex md:items-center">
+                    <ul class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-8 mt-12 md:mt-0">
+                        <li><a href="http://localhost:3000" id="login-nav-link" class="block py-4 px-8 rounded-md bg-yellow-400 text-black font-semibold text-xl hover:bg-yellow-500 transition-colors duration-300">Login</a></li>
+                    </ul>
+                </div>
+            </nav>
+
+            <div class="flex-grow flex justify-center items-center" style="color: aliceblue;">
+                <div class="flex flex-col md:flex-row w-full max-w-14xl px-8">
+                    <div class="flex flex-col items-start justify-center text-left p-8 md:w-1/2">
+                        <h2 class="text-5xl md:text-8xl font-extrabold leading-tight mb-4">
+                            Tus derechos laborales, al alcance de un chat
+                        </h2>
+                        <p class="text-lg md:text-xl max-w-xl mb-8">
+                            Saturno IA te asiste de manera gratuita para que conozcas tus derechos como trabajador en casos de despido, contratos, salarios y más.
+                        </p>
+                    </div>
+                    <div class="flex justify-center items-center p-32 md:w-2/4 mt-32 md:mt-2">
+                        <div>
+                            <img src="assets/Saturn IA.png">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <footer class="text-center py-4 text-gray-600" style="color: aliceblue;">
+                <p>&copy; 2025 Saturno IA. Todos los derechos reservados.</p>
+            </footer>
+        </section>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
