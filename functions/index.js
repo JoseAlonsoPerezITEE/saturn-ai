@@ -7,7 +7,6 @@ const logger = require("firebase-functions/logger");
 const admin = require("firebase-admin");
 const pdf = require("pdf-parse");
 const {GoogleGenerativeAI} = require("@google/generative-ai");
-const {VertexAI} = require("@google-cloud/aiplatform");
 
 admin.initializeApp();
 const GEMINI_API_KEY = defineSecret("GEMINI_API_KEY");
@@ -72,8 +71,12 @@ exports.onFileProcessed = onDocumentUpdated({
 
   const chunks = text.split("\n").filter((chunk) => chunk.trim().length > 20);
 
-  const vertexAi = new VertexAI({project:
-    process.env.GCLOUD_PROJECT, location: "us-central1"});
+  // Cambio de la importación
+  const {VertexAI} = await import("@google-cloud/aiplatform");
+  const vertexAi = new VertexAI({
+    project: process.env.GCLOUD_PROJECT,
+    location: "us-central1",
+  });
   const model = "text-embedding-004";
   const textEmbeddingModel = vertexAi.getGenerativeModel({model});
 
@@ -123,9 +126,12 @@ exports.askSaturnAI = onCall({
   const {prompt, history = []} = request.data;
 
   try {
-    const vertexAi =
-    new VertexAI({project:
-      process.env.GCLOUD_PROJECT, location: "us-central1"});
+    // Cambio de la importación
+    const {VertexAI} = await import("@google-cloud/aiplatform");
+    const vertexAi = new VertexAI({
+      project: process.env.GCLOUD_PROJECT,
+      location: "us-central1",
+    });
     const model = "text-embedding-004";
     const textEmbeddingModel = vertexAi.getGenerativeModel({model});
     const req = {contents: [{content: prompt}]};
@@ -173,11 +179,11 @@ exports.askSaturnAI = onCall({
     const genAI = new GoogleGenerativeAI(GEMINI_API_KEY.value());
     const geminiModel =
     genAI.getGenerativeModel({model: "gemini-1.5-flash-latest"});
-    const fullPrompt = `Basándote EXCLUSIVAMENTE en 
-        el siguiente contexto, responde la pregunta 
-        del usuario de forma simple y coloquial. 
-        Si no puedes responder con el contexto, 
-        dilo amablemente.\n\nCONTEXTO:\n${context}\n\nPREGUNTA: 
+    const fullPrompt = `Basándote EXCLUSIVAMENTE en
+        el siguiente contexto, responde la pregunta
+        del usuario de forma simple y coloquial.
+        Si no puedes responder con el contexto,
+        dilo amablemente.\n\nCONTEXTO:\n${context}\n\nPREGUNTA:
         "${prompt}"`;
 
     const chat = geminiModel.startChat({history});

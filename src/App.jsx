@@ -348,23 +348,42 @@ function MainApp({ user }) {
         </div>
     );
 }
-
-// --- COMPONENTE DE AUTENTICACIÓN --- (Sin cambios)
+// --- COMPONENTE DE AUTENTICACIÓN --- (con cambios)
 function AuthComponent() {
     const [isLogin, setIsLogin] = useState(true);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-  
+//---------Aqui agregamos el name, el apellido y la verificacion
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+
     const handleAuth = async (e) => {
       e.preventDefault();
-      setError(''); setLoading(true);
+      setError(''); 
+      setLoading(true);
       try {
+        if (!isLogin) {
+          if (password !== confirmPassword) {
+            setError("Las contraseñas no coinciden.");
+            setLoading(false);
+            return;
+          }
+        }
+
         if (isLogin) {
           await signInWithEmailAndPassword(auth, email, password);
         } else {
-          await createUserWithEmailAndPassword(auth, email, password);
+          const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+          await addDoc(collection(db, "users"), {
+            userId: userCredential.user.uid,
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            createdAt: serverTimestamp()
+          });
         }
       } catch (err) {
         setError(err.message.includes("auth/invalid-credential") ? "Correo o contraseña incorrectos." : "Ha ocurrido un error.");
@@ -372,7 +391,7 @@ function AuthComponent() {
       }
       setLoading(false);
     };
-  
+
     return (
       <div className="min-h-screen bg-gray-900 flex items-center justify-center font-sans">
         <div className="w-full max-w-md p-8 space-y-8 bg-gray-800 rounded-2xl shadow-2xl">
@@ -381,8 +400,27 @@ function AuthComponent() {
             <p className="text-gray-400 mt-2">{isLogin ? "Inicia sesión para continuar" : "Crea una cuenta para empezar"}</p>
           </div>
           <form className="space-y-6" onSubmit={handleAuth}>
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full p-3 text-white bg-gray-700 rounded-md border border-gray-600 focus:border-indigo-500 focus:ring-indigo-500 transition" placeholder="tu@correo.com" required/>
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full p-3 text-white bg-gray-700 rounded-md border border-gray-600 focus:border-indigo-500 focus:ring-indigo-500 transition" placeholder="••••••••" required/>
+            { !isLogin && (
+              <>
+                <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} 
+                       className="w-full p-3 text-white bg-gray-700 rounded-md border border-gray-600 transition" 
+                       placeholder="Nombre" required/>
+                <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} 
+                       className="w-full p-3 text-white bg-gray-700 rounded-md border border-gray-600 transition" 
+                       placeholder="Apellido" required/>
+              </>
+            )}
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} 
+                   className="w-full p-3 text-white bg-gray-700 rounded-md border border-gray-600 transition" 
+                   placeholder="tu@correo.com" required/>
+            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} 
+                   className="w-full p-3 text-white bg-gray-700 rounded-md border border-gray-600 transition" 
+                   placeholder="••••••••" required/>
+            { !isLogin && (
+              <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} 
+                     className="w-full p-3 text-white bg-gray-700 rounded-md border border-gray-600 transition" 
+                     placeholder="Confirmar contraseña" required/>
+            )}
             {error && <p className="text-sm text-red-400 text-center">{error}</p>}
             <button type="submit" disabled={loading} className="w-full p-3 text-white bg-indigo-600 rounded-md font-semibold hover:bg-indigo-700 transition disabled:bg-indigo-400">
               {loading ? (isLogin ? "Iniciando..." : "Registrando...") : (isLogin ? "Iniciar Sesión" : "Registrar")}
@@ -398,7 +436,6 @@ function AuthComponent() {
       </div>
     );
 }
-
 // --- COMPONENTE RAÍZ DE LA APP ---
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -414,7 +451,7 @@ function App() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-900 flex items-ce  nter justify-center">
         <h1 className="text-4xl font-bold text-white animate-pulse">Cargando Saturn AI...</h1>
       </div>
     );
